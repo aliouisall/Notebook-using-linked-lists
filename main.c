@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 //Structure personne
 typedef struct Personne Personne;
@@ -59,8 +60,44 @@ void afficherCarnet(Carnet *carnet){
     while (actuel != NULL){
         printf("Position - %d | Nom : %s et Numéro de téléphone : %s \n", i, actuel->numTel, actuel->nom);
         actuel = actuel->suivant;
+        i++;
     }
     printf("NULL\n");
+
+}
+
+// Fonction d'enregistrement dans un fichier
+
+void record(){
+
+    char occurence[256];
+    FILE *file = fopen("personne.txt", "a");
+
+    if (file == NULL)
+        exit(1);
+
+    bool tiret = false;
+    do
+    {
+        printf("Saisissez le nom et le numéro en les séparant par un tiret du 6\n");
+        fflush(stdin);
+        fgets(occurence, 255, stdin);
+        int size = sizeof(occurence)/sizeof(occurence[0]);
+        for(int i = 0; i < size; i++){
+            if(occurence[i] == '-'){
+                tiret = true;
+            }
+        }
+    } while (tiret == false);
+    fputs(occurence, file);
+    
+    while(fgets(occurence, 255, file) != NULL){
+        // printf("%s\n", occurence);
+    }
+    
+    fclose(file);
+
+    return 0;
 
 }
 
