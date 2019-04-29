@@ -91,10 +91,6 @@ void record(){
     } while (tiret == false);
     fputs(occurence, file);
     
-    while(fgets(occurence, 255, file) != NULL){
-        // printf("%s\n", occurence);
-    }
-    
     fclose(file);
 
     return 0;
