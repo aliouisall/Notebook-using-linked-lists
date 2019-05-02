@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//Structure personne
+//Structure Personne
 typedef struct Personne{
     char *nom;
     char *telephone;
@@ -12,15 +12,15 @@ typedef struct Personne{
 
 //Structure Carnet
 typedef struct Carnet Carnet;
-struct Carnet{
+struct Carnet {
     personne *premier;
+
 };
 
-// Fonction renvoyant un pointeur vers une structure personne
-
-personne *nouveau(char *nom,char *tel, personne *suiv){
-	
-    personne *personne=malloc(sizeof(personne));
+//Fonction renvoyant un pointeur vers une personne
+personne *nouveau(char *nom,char *tel, personne *suiv)
+{
+	personne *personne=malloc(sizeof(personne));
 	personne->nom = (char*)malloc(sizeof(nom));
 	personne->telephone = (char*)malloc(sizeof(tel));
 	strcpy(personne->nom,nom);
@@ -29,14 +29,12 @@ personne *nouveau(char *nom,char *tel, personne *suiv){
 	personne->suiv=suiv;
 
 	return personne;
-
 }
 
-// Fonction qui ajoute une personne à la fin d'un carnet
-
-void ajoute_fin(char *nom, char *tel, Carnet *carnet){
-	
-    personne *p=carnet->premier;
+//Fonction permettant d'ajouter une personne à la fin d'un carnet
+void ajoute_fin(char *nom, char *tel, Carnet *carnet)
+{
+	personne *p=carnet->premier;
 	
 	if(p==NULL)
 	{
@@ -45,28 +43,31 @@ void ajoute_fin(char *nom, char *tel, Carnet *carnet){
 	}
 
 	while(p->suiv != NULL)
-		p=p->suiv;
-	p->suiv=nouveau(nom,tel,NULL);
 
+  {
+
+		p=p->suiv;
+  }
+  
+  //p=p->suiv;
+  p->suiv=nouveau(nom,tel,NULL);
 }
 
-//Fonction affichant une personne donnée
-
-void AfficherPersonne(personne *p){
-	
-    if (p == NULL)
+//Fonction permettant d'afficher une personne donnée
+void AfficherPersonne(personne *p)
+{
+	if (p == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
 
-	printf("le nom de la personne est %s\n", p->nom);
-	printf("Le telephone de la personne est %s\n", p->telephone);
-
+	printf("Le nom de la personne est %s\n", p->nom);
+	printf("Le numéro de téléphone de la personne est %s\n", p->telephone);
 }
 
-// Fonction affichant un carnet
-
-void AfficherCarnet(Carnet *carnet){
+// Fonction permettant d'afficher un carnet
+void AfficherCarnet(Carnet *carnet)
+{
     
    personne *p=carnet->premier;
 	if (p==NULL)
@@ -82,21 +83,21 @@ void AfficherCarnet(Carnet *carnet){
 
 }
 
-// Fonction de tri et d'affichage des personnes d'un carnet 
-
-void Tri(Carnet *C){
-
-// Ici on va ranger les elements dans l'ordre croisssant avant de les afficher.
+//Fonction de tri et d'affichage des personnes d'un carnet 
+void Tri(Carnet *C)
+{
+// ici on va ranger les éléments dans l'ordre croisssant avant de les afficher.
    
-   personne *temp, *temp1, *temp3;
-   temp=malloc(sizeof(temp));
-   temp1=malloc(sizeof(temp1));
-   temp3=malloc(sizeof(temp3));
+   personne *temp, *temp1;
+   temp=malloc(sizeof(personne));
+   temp1=malloc(sizeof(personne));
+   char *v = NULL;
+   char *w = NULL;
    personne *min;
-   min=malloc(sizeof(min));
+   min=malloc(sizeof(personne));
+
    for(temp = C->premier ; temp != NULL ; temp=temp->suiv)
    {
-    	temp3 = temp;
     	min->nom = (char*)malloc(sizeof(min->nom));
     	min->telephone = (char*)malloc(sizeof(min->telephone));
     	strcpy(min->nom,temp->nom);
@@ -106,48 +107,45 @@ void Tri(Carnet *C){
     	{
     		if(strcmp(min->nom,temp1->nom)>0)
     		{
-    			temp3=temp1; // Le 3e tampon est l'adresse de l'élement où se trouve le minimum
-           		strcpy(min->nom,temp3->nom);
-     	   		strcpy(min->telephone,temp3->telephone);
-        	}
+          w = (char*)malloc(strlen(temp1->nom) + 1);
+          strcpy(w,temp1->nom);
+          strcpy(temp1->nom, min->nom);
+          strcpy(min->nom, w);
+        }
      	}
-     
-    	temp3->nom = (char*)malloc(sizeof(temp3->nom));
-    	temp3->telephone = (char*)malloc(sizeof(temp3->telephone));
-    	temp->nom = (char*)malloc(sizeof(temp->nom));
-    	temp->telephone = (char*)malloc(sizeof(temp->telephone));
-    	strcpy(temp3->nom,temp->nom); // échange des 2 élements...
-    	strcpy(temp->nom,min->nom);
-    	strcpy(temp3->telephone,temp->telephone);// échange des 2 elements..
-    	strcpy(temp->telephone,min->telephone);  
-    
-   }
-    AfficherCarnet(C);
+      
+      v = (char*)malloc(strlen(temp->nom) + 1);
+      strcpy(v, temp->nom);
+      temp->nom = (char*)malloc(strlen(min->nom) + 1);
+      strcpy(temp->nom,min->nom);
+      strcpy(min->nom, v);
+     	}
 
+    AfficherCarnet(C);
 }
 
-// Fonction qui permet de saisir et d'ajouter des personnes dans un carnet
-
-void SaisiePersonne(){
-	
-    Carnet *C;
+//Fonction qui permet de saisir et d'ajouter des personnes dans un carnet
+void SaisiePersonne()
+{
+	Carnet *C;
 	char *nom;
 	char *telephone;
 
 	C = malloc(sizeof(Carnet));
 	int nbPersonne, i = 0;
 
-	 printf("donner le nombre de personnes a ajouter\n");
+	 printf("Donner le nombre de personnes à ajouter\n");
      scanf("%d",&nbPersonne);
 
-    do{
+    do
+    {
     	
         do{
         	nom = (char*)malloc(sizeof(char*));
    			telephone = (char*)malloc(sizeof(char*));
-            printf("donner le nom de la personne numero %d\n",i+1);
+            printf("Donner le nom de la personne à la position %d\n",i+1);
             scanf("%s",nom);
-            printf("Donner son numero de telephone\n");
+            printf("Donner son numéro de téléphone\n");
             scanf("%s",telephone);
 
         }while(nom == "" || telephone == "");
@@ -158,7 +156,6 @@ void SaisiePersonne(){
         }
         else
         {
-
             ajoute_fin(nom, telephone, C);
         }
           		
@@ -166,11 +163,9 @@ void SaisiePersonne(){
      	nbPersonne--;
     }while(nbPersonne >=1);
     Tri(C);
-
 }
 
-// Fonction d'enregistrement dans un fichier
-
+// Fonction qui permet enregistrer des personnes dans un fichier
 void record(){
 
     char occurence[256];
@@ -198,10 +193,59 @@ void record(){
 
 }
 
+void readContacts(){
+    FILE *file = fopen("personne.txt", "r");
+    if (file == NULL)
+        exit(1);
+
+    char str[256];
+    const char s[2] = "-";
+    int compteur = 1;
+    while(fgets(str, 255, file)){
+        char *token;
+
+        /* get the first token */
+        token = strtok(str, s);
+        int i = 0;
+        while( token != NULL ) {
+            if(i == 0){
+                printf( "Le nom du contact à la position %d est : %s\n", compteur, token );
+            } else {
+                printf( "Le numéro de téléphone du contact est : %s\n", token );
+            }
+            token = strtok(NULL, s);
+            i++;
+        }
+        compteur++;
+    }
+
+    fclose(file);
+}
+
 int main(int argc, char const *argv[]) {
     
+    int choix;
+
     printf("Carnet d'adresse\n");
-    SaisiePersonne();
+    printf("Taper 1 pour ajouter une nouvelle personne\n");
+    printf("Taper 2 pour enregistrer des personnes dans un fichier \n");
+    printf("Taper 3 pour voir les contacts qui sont dans un fichier \n");
+    printf("Taper 4 pour quitter\n");
+
+    printf("Quel est votre choix\n");
+    scanf("%d",&choix);
+
+    if(choix == 1){
+        SaisiePersonne();
+    } else if(choix == 2){
+        record();
+    } else if(choix == 3){
+        readContacts();
+    } else if(choix == 4){
+        printf("Merci de nous faire confiance !\n");
+    } else{
+        exit(1);
+    }
     return 0;
-    
+
 }
